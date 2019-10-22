@@ -1,5 +1,4 @@
 plugins {
-  id("com.diffplug.gradle.spotless") apply false
   id("com.github.ben-manes.versions")
   id("net.rdrei.android.buildtimetracker")
 }
