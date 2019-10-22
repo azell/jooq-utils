@@ -13,6 +13,7 @@ ext {
     immutablesBuilder: "org.immutables:builder:${Versions.immutables}",
     immutablesProcessor: "org.immutables:value:${Versions.immutables}",
     javaAnnotations: "org.jetbrains:annotations:${Versions.javaAnnotations}",
+    jooq: "org.jooq:jooq:${Versions.jooq}",
     jooqCodegen: "org.jooq:jooq-codegen:${Versions.jooq}",
     liquibaseCore: "org.liquibase:liquibase-core:${Versions.liquibase}",
   ]

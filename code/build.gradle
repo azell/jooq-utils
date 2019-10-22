@@ -1,6 +1,5 @@
 plugins {
-  id("java")
-  id("application")
+  id("java-library")
   id("nu.studer.jooq")
   id("org.liquibase.gradle")
 }
@@ -13,10 +12,10 @@ dependencies {
   liquibaseRuntime(Libs.liquibaseCore)
 
   annotationProcessor(Libs.immutablesProcessor)
+  api("org.jooq:jooq")
   compileOnly(Libs.javaAnnotations)
   compileOnly(Libs.immutablesAnnotations)
   compileOnly(Libs.immutablesBuilder)
-  implementation("org.jooq:jooq")
 }
 
 repositories {
@@ -75,5 +74,3 @@ tasks {
     targetCompatibility = JavaVersion.VERSION_11
   }
 }
-
-mainClassName = "com.github.azell.jooq_utils.sample.App"
