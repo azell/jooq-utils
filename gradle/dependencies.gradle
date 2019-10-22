@@ -1,9 +1,19 @@
 ext {
   Versions = [
+    h2: "1.4.200",
+    immutables: "2.8.1",
+    javaAnnotations: "17.0.0",
     jooq: "3.12.1",
+    liquibase: "3.8.0",
   ]
 
   Libs = [
+    h2: "com.h2database:h2:${Versions.h2}",
+    immutablesAnnotations: "org.immutables:value-annotations:${Versions.immutables}",
+    immutablesBuilder: "org.immutables:builder:${Versions.immutables}",
+    immutablesProcessor: "org.immutables:value:${Versions.immutables}",
+    javaAnnotations: "org.jetbrains:annotations:${Versions.javaAnnotations}",
     jooqCodegen: "org.jooq:jooq-codegen:${Versions.jooq}",
+    liquibaseCore: "org.liquibase:liquibase-core:${Versions.liquibase}",
   ]
 }

@@ -3,9 +3,11 @@ pluginManagement {
     id("com.diffplug.gradle.spotless") version "3.25.0"
     id("com.github.ben-manes.versions") version "0.27.0"
     id("net.rdrei.android.buildtimetracker") version "0.11.0"
+    id("nu.studer.jooq") version "3.0.3"
+    id("org.liquibase.gradle") version "2.0.1"
   }
 }
 
-include("generators")
+include("generators", "sample")
 
 rootProject.name = "jooq-utils"
