@@ -23,6 +23,3 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: false
-              - column:
-                  name: nick_name
-                  type: varchar(255)

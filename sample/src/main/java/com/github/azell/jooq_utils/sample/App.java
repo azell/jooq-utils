@@ -6,7 +6,7 @@ import com.github.azell.jooq_utils.sample.data.tables.pojos.PersonBuilder;
 public class App {
   public static void main(String[] args) {
     IPerson person = new PersonBuilder()
-      .id(123)
+      .id(null)
       .firstName("Mickey")
       .lastName("Mouse")
       .build();

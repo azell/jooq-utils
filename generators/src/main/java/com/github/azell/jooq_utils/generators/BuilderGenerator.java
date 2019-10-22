@@ -43,8 +43,10 @@ public class BuilderGenerator extends JavaGenerator {
       for (TypedElementDefinition<?> column : getTypedElements(tableOrUDT)) {
         out.println(separator1);
 
-        // Nullable annotation
-        if (column.getType().isNullable()) {
+        // [#5128] defaulted columns are nullable in Java
+        if (column.getType(resolver()).isNullable()
+            || column.getType(resolver()).isDefaulted()
+            || column.getType(resolver()).isIdentity()) {
           out.tab(2).println("@%s", out.ref("org.jetbrains.annotations.Nullable"));
         }
 
