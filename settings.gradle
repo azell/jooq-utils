@@ -1,0 +1,8 @@
+pluginManagement {
+  plugins {
+  }
+}
+
+// include("", "")
+
+rootProject.name = "jooq-utils"
