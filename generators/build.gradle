@@ -4,6 +4,11 @@ plugins {
 }
 
 dependencies {
+  api(Libs.jooqCodegen)
+}
+
+repositories {
+  mavenCentral()
 }
 
 spotless {
@@ -12,6 +17,8 @@ spotless {
   }
 }
 
-tasks.withType(JavaCompile) {
-  dependsOn("spotlessApply")
+tasks {
+  compileJava {
+    dependsOn("spotlessApply")
+  }
 }

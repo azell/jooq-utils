@@ -1,7 +1,9 @@
 ext {
   Versions = [
+    jooq: "3.12.1",
   ]
 
   Libs = [
+    jooqCodegen: "org.jooq:jooq-codegen:${Versions.jooq}",
   ]
 }
