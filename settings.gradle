@@ -8,6 +8,6 @@ pluginManagement {
   }
 }
 
-include("app", "code", "generators")
+include("app", "generators", "schema")
 
 rootProject.name = "jooq-utils"

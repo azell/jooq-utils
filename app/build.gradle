@@ -6,7 +6,7 @@ plugins {
 
 dependencies {
   implementation(Libs.jooq)
-  implementation(project(":code"))
+  implementation(project(":schema"))
 }
 
 spotless {
