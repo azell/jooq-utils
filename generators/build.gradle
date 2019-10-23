@@ -7,10 +7,6 @@ dependencies {
   api(Libs.jooqCodegen)
 }
 
-repositories {
-  mavenCentral()
-}
-
 spotless {
   java {
     googleJavaFormat()

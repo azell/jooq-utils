@@ -9,10 +9,6 @@ dependencies {
   implementation(project(":code"))
 }
 
-repositories {
-  mavenCentral()
-}
-
 spotless {
   java {
     googleJavaFormat()

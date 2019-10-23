@@ -18,10 +18,6 @@ dependencies {
   compileOnly(Libs.immutablesBuilder)
 }
 
-repositories {
-  mavenCentral()
-}
-
 jooq {
   version = Versions.jooq
   sample(sourceSets.main) {
@@ -45,7 +41,6 @@ jooq {
         interfaces = true
         javaTimeTypes = true
         pojosEqualsAndHashCode = true
-        records = false
         serializablePojos = false
       }
       target {
