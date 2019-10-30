@@ -1,71 +1,24 @@
 plugins {
-  id("java-library")
-  id("nu.studer.jooq")
+  id("base")
   id("org.liquibase.gradle")
 }
 
 dependencies {
-  jooqRuntime(Libs.h2)
-  jooqRuntime(project(":generators"))
-
   liquibaseRuntime(Libs.h2)
   liquibaseRuntime(Libs.liquibaseCore)
-
-  annotationProcessor(Libs.immutablesProcessor)
-  api("org.jooq:jooq")
-  compileOnly(Libs.javaAnnotations)
-  compileOnly(Libs.immutablesAnnotations)
-  compileOnly(Libs.immutablesBuilder)
-}
-
-jooq {
-  version = Versions.jooq
-  sample(sourceSets.main) {
-    jdbc {
-      driver = "org.h2.Driver"
-      url = "jdbc:h2:file:./build/sampledb"
-      user = "sa"
-      password = ""
-    }
-    generator {
-      name = "com.github.azell.jooq_utils.generators.BuilderGenerator"
-      database {
-        name = "org.jooq.meta.h2.H2Database"
-        includes = ".*"
-        excludes = "information_schema[.].*|databasechangelog.*"
-        inputSchema = "PUBLIC"
-      }
-      generate {
-        deprecated = false
-        immutablePojos = true
-        interfaces = true
-        javaTimeTypes = true
-        pojosEqualsAndHashCode = true
-        serializablePojos = false
-      }
-      target {
-        packageName = "com.github.azell.jooq_utils.sample.data"
-      }
-    }
-  }
 }
 
 liquibase {
   activities {
     main {
       changeLogFile "$projectDir/src/main/resources/db/changelog/db.changelog-master.yaml"
-      url "jdbc:h2:file:./build/sampledb"
+      url "jdbc:h2:file:$buildDir/sampledb"
       username "sa"
       password ""
     }
   }
 }
 
-generateSampleJooqSchemaSource.dependsOn(update)
-
 tasks {
-  compileJava {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-  }
+  build.dependsOn(update)
 }
