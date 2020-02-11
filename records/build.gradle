@@ -10,8 +10,7 @@ dependencies {
   annotationProcessor(Libs.immutablesProcessor)
   api("org.jooq:jooq")
   compileOnly(Libs.javaAnnotations)
-  compileOnly(Libs.immutablesAnnotations)
-  compileOnly(Libs.immutablesBuilder)
+  compileOnly(Libs.immutablesAnnotations, Libs.immutablesBuilder)
 }
 
 jooq {

@@ -6,6 +6,7 @@ plugins {
 dependencies {
   liquibaseRuntime(Libs.h2)
   liquibaseRuntime(Libs.liquibaseCore)
+  liquibaseRuntime(Libs.snakeyaml)
 }
 
 liquibase {

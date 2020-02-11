@@ -1,10 +1,11 @@
 ext {
   Versions = [
     h2: "1.4.200",
-    immutables: "2.8.1",
-    javaAnnotations: "17.0.0",
-    jooq: "3.12.2",
-    liquibase: "3.8.0",
+    immutables: "2.8.3",
+    javaAnnotations: "18.0.0",
+    jooq: "3.12.4",
+    liquibase: "3.8.6",
+    snakeyaml: "1.25",
   ]
 
   Libs = [
@@ -16,5 +17,6 @@ ext {
     jooq: "org.jooq:jooq:${Versions.jooq}",
     jooqCodegen: "org.jooq:jooq-codegen:${Versions.jooq}",
     liquibaseCore: "org.liquibase:liquibase-core:${Versions.liquibase}",
+    snakeyaml: "org.yaml:snakeyaml:${Versions.snakeyaml}",
   ]
 }
