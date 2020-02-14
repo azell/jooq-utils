@@ -3,7 +3,7 @@ ext {
     h2: "1.4.200",
     immutables: "2.8.3",
     javaAnnotations: "18.0.0",
-    jooq: "3.12.4",
+    jooq: "3.13.0",
     liquibase: "3.8.6",
     snakeyaml: "1.25",
   ]

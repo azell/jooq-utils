@@ -1,5 +1,6 @@
 package com.github.azell.jooq_utils.generators;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.jooq.codegen.GeneratorStrategy.Mode;
 import org.jooq.codegen.JavaGenerator;
@@ -41,6 +42,8 @@ public class BuilderGenerator extends JavaGenerator {
 
       String separator1 = "";
       for (TypedElementDefinition<?> column : getTypedElements(tableOrUDT)) {
+        final String nullableAnnotation = nullableOrNonnullAnnotation(out, column);
+
         out.println(separator1);
 
         // [#5128] defaulted columns are nullable in Java
@@ -52,7 +55,8 @@ public class BuilderGenerator extends JavaGenerator {
 
         out.tab(2)
             .print(
-                "%s %s",
+                "[[before=@][after= ][%s]]%s %s",
+                list(nullableAnnotation),
                 StringUtils.rightPad(
                     out.ref(getJavaType(column.getType(resolver(Mode.POJO)), Mode.POJO)),
                     maxLength),
@@ -89,5 +93,23 @@ public class BuilderGenerator extends JavaGenerator {
     else if (definition instanceof RoutineDefinition)
       return ((RoutineDefinition) definition).getAllParameters();
     else throw new IllegalArgumentException("Unsupported type : " + definition);
+  }
+
+  private String nullableOrNonnullAnnotation(JavaWriter out, TypedElementDefinition<?> column) {
+    return column.getType().isNullable() && generateNullableAnnotation()
+        ? out.ref(generatedNullableAnnotationType())
+        : !column.getType().isNullable() && generateNonnullAnnotation()
+            ? out.ref(generatedNonnullAnnotationType())
+            : null;
+  }
+
+  @SuppressWarnings("unchecked")
+  private static final <T> List<T> list(T... objects) {
+    List<T> result = new ArrayList<>();
+
+    if (objects != null)
+      for (T object : objects) if (object != null && !"".equals(object)) result.add(object);
+
+    return result;
   }
 }
