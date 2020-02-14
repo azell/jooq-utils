@@ -70,6 +70,12 @@ public class BuilderGenerator extends JavaGenerator {
       }
 
       out.tab(1).println("}");
+
+      // Immutables builder method
+      out.println();
+      out.tab(1).println("public static %s%s builder() {", className, "Builder");
+      out.tab(2).println("return new %s%s();", className, "Builder");
+      out.tab(1).println("}");
     }
   }
 
