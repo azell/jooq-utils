@@ -1,0 +1,23 @@
+plugins {
+  id("java-library")
+  id("com.diffplug.gradle.spotless")
+}
+
+dependencies {
+  api(Libs.mapstructProcessor)
+}
+
+spotless {
+  java {
+    googleJavaFormat()
+  }
+}
+
+tasks {
+  compileJava {
+    dependsOn("spotlessApply")
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+  }
+}
