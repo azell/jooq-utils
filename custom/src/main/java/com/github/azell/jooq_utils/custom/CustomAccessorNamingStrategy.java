@@ -1,4 +1,4 @@
-package com.github.azell.jooq_utils.accessors;
+package com.github.azell.jooq_utils.custom;
 
 import java.util.regex.Pattern;
 import javax.lang.model.element.ExecutableElement;

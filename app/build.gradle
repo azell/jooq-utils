@@ -5,10 +5,8 @@ plugins {
 }
 
 dependencies {
-  annotationProcessor(Libs.immutablesProcessor)
   annotationProcessor(Libs.mapstructProcessor)
-  annotationProcessor(project(":accessors"))
-  compileOnly(Libs.immutablesAnnotations)
+  annotationProcessor(project(":custom"))
   implementation(Libs.jooq)
   implementation(Libs.mapstruct)
   implementation(project(":records"))
