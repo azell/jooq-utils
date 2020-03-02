@@ -14,7 +14,7 @@ dependencies {
 }
 
 jooq {
-  def schemaBuildDir = project(':schema').buildDir
+  def schemaBuildDir = project(":schema").buildDir
 
   version = Versions.jooq
   sample(sourceSets.main) {
@@ -55,4 +55,4 @@ tasks {
   }
 }
 
-generateSampleJooqSchemaSource.dependsOn(':schema:update')
+generateSampleJooqSchemaSource.dependsOn(":schema:update")
