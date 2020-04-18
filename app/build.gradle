@@ -9,7 +9,7 @@ dependencies {
   annotationProcessor(project(":custom"))
   implementation(Libs.jooq)
   implementation(Libs.mapstruct)
-  implementation(project(":records"))
+  implementation(project(":entities"), project(":records"))
 }
 
 spotless {

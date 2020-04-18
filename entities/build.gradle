@@ -1,0 +1,76 @@
+plugins {
+  id("java-library")
+}
+
+configurations {
+  openjpa
+}
+
+dependencies {
+  openjpa(Libs.openjpaAll)
+  openjpa(Libs.postgresql)
+
+  annotationProcessor(Libs.jpaModelGen)
+  api(Libs.javaxPersistenceApi)
+}
+
+def src = "${buildDir}/generated-src/openjpa"
+def dst = "${buildDir}/generated-src/raw"
+
+sourceSets {
+  main {
+    java {
+      srcDirs(src)
+    }
+  }
+}
+
+tasks {
+  compileJava {
+    dependsOn("filterEntities")
+
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+  }
+}
+
+def addIdentity(line) {
+  if (line =~ /@Id\b/) {
+    return [line, "@GeneratedValue(strategy=GenerationType.IDENTITY)"].join(" ")
+  }
+
+  return line
+}
+
+task filterEntities(type: Copy) {
+  dependsOn("openjpa")
+
+  from(dst)
+  into(src)
+  exclude("**/Databasechangelog*.java")
+  filter { line -> addIdentity(line) }
+}
+
+task openjpa(type: JavaExec) {
+  dependsOn(clean, ":schema:update")
+
+  args = [
+    "-annotations", "true",
+    "-directory", dst,
+    "-metadata", "none",
+    "-nullableAsObject", "true",
+    "-pkg", "com.github.azell.jooq_utils.sample.entities",
+    "-properties", "persistence.xml",
+    "-useGenericCollections", "true",
+  ]
+
+  classpath = configurations["openjpa"]
+  main = "org.apache.openjpa.jdbc.meta.ReverseMappingTool"
+
+  systemProperties = [
+    "javax.persistence.jdbc.driver": "org.postgresql.Driver",
+    "javax.persistence.jdbc.url": "jdbc:postgresql://localhost:5432/sampledb",
+    "javax.persistence.jdbc.user": "postgres",
+    "javax.persistence.jdbc.password": "mysecretpassword",
+  ]
+}

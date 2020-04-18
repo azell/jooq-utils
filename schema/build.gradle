@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-  liquibaseRuntime(Libs.h2)
   liquibaseRuntime(Libs.liquibaseCore)
+  liquibaseRuntime(Libs.postgresql)
   liquibaseRuntime(Libs.snakeyaml)
 }
 
@@ -13,9 +13,9 @@ liquibase {
   activities {
     main {
       changeLogFile "$projectDir/src/main/resources/db/changelog/db.changelog-master.yaml"
-      url "jdbc:h2:file:$buildDir/sampledb"
-      username "sa"
-      password ""
+      url "jdbc:postgresql://localhost:5432/sampledb"
+      username "postgres"
+      password "mysecretpassword"
     }
   }
 }

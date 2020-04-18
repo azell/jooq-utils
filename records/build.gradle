@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  jooqRuntime(Libs.h2)
+  jooqRuntime(Libs.postgresql)
   jooqRuntime(project(":generators"))
 
   annotationProcessor(Libs.immutablesProcessor)
@@ -14,23 +14,21 @@ dependencies {
 }
 
 jooq {
-  def schemaBuildDir = project(":schema").buildDir
-
   version = Versions.jooq
   sample(sourceSets.main) {
     jdbc {
-      driver = "org.h2.Driver"
-      url = "jdbc:h2:file:$schemaBuildDir/sampledb"
-      user = "sa"
-      password = ""
+      driver = "org.postgresql.Driver"
+      url = "jdbc:postgresql://localhost:5432/sampledb"
+      user = "postgres"
+      password = "mysecretpassword"
     }
     generator {
       name = "com.github.azell.jooq_utils.generators.BuilderGenerator"
       database {
-        name = "org.jooq.meta.h2.H2Database"
+        name = "org.jooq.meta.postgres.PostgresDatabase"
         includes = ".*"
         excludes = "information_schema[.].*|databasechangelog.*"
-        inputSchema = "PUBLIC"
+        inputSchema = "public"
       }
       generate {
         deprecated = false
