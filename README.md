@@ -17,3 +17,6 @@ docker run -it --rm --link some-postgres postgres:11.7 psql -h some-postgres -U 
 drop database if exists sampledb;
 create database sampledb;
 ```
+
+## JPA Array Support
+See the **postgres-arrays** branch.
