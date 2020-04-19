@@ -1,5 +1,6 @@
 package com.github.azell.jooq_utils.app;
 
+import java.util.List;
 import org.immutables.value.Value;
 
 @Value.Immutable
@@ -10,4 +11,6 @@ public interface Employee {
   String getFirstName();
 
   String getLastName();
+
+  List<String> getNicknames();
 }

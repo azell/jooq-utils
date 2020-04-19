@@ -11,6 +11,8 @@ dependencies {
   openjpa(Libs.postgresql)
 
   annotationProcessor(Libs.jpaModelGen)
+
+  api(Libs.hibernateCore, Libs.hibernateTypes)
   api(Libs.javaxPersistenceApi)
 }
 
@@ -34,21 +36,103 @@ tasks {
   }
 }
 
-def addIdentity(line) {
-  if (line =~ /@Id\b/) {
-    return [line, "@GeneratedValue(strategy=GenerationType.IDENTITY)"].join(" ")
+def columnDefinition(line, types, state) {
+  def matcher = line =~ /(.*@Column\b.*\bcolumnDefinition\b[^"]*")([^"]*)(.*)/
+
+  if (matcher) {
+    def e = types.find { it.key == matcher.group(2) }
+
+    if (e) {
+      // placeholder for field definition
+      state._ = e
+
+      return [
+        "${matcher.group(1)}$e.value.columnDefinition${matcher.group(3)}",
+        "@org.hibernate.annotations.Type(type=$e.value.name)"
+      ].join(" ")
+    }
   }
 
-  return line
+  line
 }
+
+def fieldDefinition(line, types, state) {
+  def matcher = line =~ /(.*\bprivate\b\s*)(\S*)(.*)/
+
+  if (matcher) {
+    def e = state._
+    state._ = null
+
+    if (e) {
+      def field = matcher.group(3).replaceAll("[^\$\\w]", "")
+      state[field] = e
+
+      return "${matcher.group(1)}$e.value.fieldDefinition${matcher.group(3)}"
+    }
+  }
+
+  line
+}
+
+def generatedValue(line, types, state) {
+  if (line =~ /@Id\b/) {
+    return "$line @GeneratedValue(strategy = GenerationType.IDENTITY)"
+  }
+
+  line
+}
+
+def getterOrSetter(line, types, state) {
+  def matcher = line =~ /(.*\bpublic\b.*\b[gs]et)([$\w]*)(.*)/
+
+  if (matcher) {
+    def e = state[matcher.group(2).uncapitalize()]
+
+    if (e) {
+      return line.replace("byte[]", e.value.fieldDefinition)
+    }
+  }
+
+  line
+}
+
+def typeDefs(line, types, state) {
+  if (line =~ /@Table\b/) {
+    def str = types.collect { k, v ->
+      "@org.hibernate.annotations.TypeDef(name=$v.name, typeClass=$v.typeClass)"
+    }.join(", ")
+
+    return [line, "@org.hibernate.annotations.TypeDefs({", str, "})"].join(" ")
+  }
+
+  line
+}
+
 
 task filterEntities(type: Copy) {
   dependsOn("openjpa")
 
+  def state = [:]
+  def types = [
+    _text: [
+      columnDefinition: "text[]",
+      fieldDefinition: "java.util.List<String>",
+      name: "\"list-array\"",
+      typeClass: "com.vladmihalcea.hibernate.type.array.ListArrayType.class",
+    ],
+  ]
+
   from(dst)
   into(src)
   exclude("**/Databasechangelog*.java")
-  filter { line -> addIdentity(line) }
+  eachFile { detail -> state.clear() }
+  filter { line ->
+    line = generatedValue(line, types, state)
+    line = typeDefs(line, types, state)
+    line = columnDefinition(line, types, state)
+    line = fieldDefinition(line, types, state)
+    line = getterOrSetter(line, types, state)
+  }
 }
 
 task openjpa(type: JavaExec) {

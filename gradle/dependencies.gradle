@@ -1,6 +1,7 @@
 ext {
   Versions = [
     hibernate: "5.4.14.Final",
+    hibernateTypes: "2.9.8",
     immutables: "2.8.3",
     javaAnnotations: "19.0.0",
     javaxPersistence: "2.2",
@@ -13,14 +14,16 @@ ext {
   ]
 
   Libs = [
+    hibernateCore: "org.hibernate:hibernate-core:${Versions.hibernate}",
+    hibernateTypes: "com.vladmihalcea:hibernate-types-52:${Versions.hibernateTypes}",
     immutablesAnnotations: "org.immutables:value-annotations:${Versions.immutables}",
     immutablesBuilder: "org.immutables:builder:${Versions.immutables}",
     immutablesProcessor: "org.immutables:value:${Versions.immutables}",
     javaAnnotations: "org.jetbrains:annotations:${Versions.javaAnnotations}",
     javaxPersistenceApi: "javax.persistence:javax.persistence-api:${Versions.javaxPersistence}",
-    jpaModelGen: "org.hibernate:hibernate-jpamodelgen:${Versions.hibernate}",
     jooq: "org.jooq:jooq:${Versions.jooq}",
     jooqCodegen: "org.jooq:jooq-codegen:${Versions.jooq}",
+    jpaModelGen: "org.hibernate:hibernate-jpamodelgen:${Versions.hibernate}",
     liquibaseCore: "org.liquibase:liquibase-core:${Versions.liquibase}",
     mapstruct: "org.mapstruct:mapstruct:${Versions.mapstruct}",
     mapstructProcessor: "org.mapstruct:mapstruct-processor:${Versions.mapstruct}",
