@@ -17,3 +17,5 @@ docker run -it --rm --link some-postgres postgres:11.7 psql -h some-postgres -U 
 drop database if exists sampledb;
 create database sampledb;
 ```
+
+Ref: https://github.com/vladmihalcea/hibernate-types#array
