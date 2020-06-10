@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
   jooqRuntime(Libs.postgresql)
+  jooqRuntime(Libs.slf4jSimple)
   jooqRuntime(project(":generators"))
 
   annotationProcessor(Libs.immutablesProcessor)
