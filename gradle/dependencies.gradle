@@ -1,9 +1,9 @@
 ext {
   Versions = [
     h2: "1.4.200",
-    immutables: "2.8.3",
+    immutables: "2.8.8",
     javaAnnotations: "19.0.0",
-    jooq: "3.13.1",
+    jooq: "3.13.2",
     liquibase: "3.8.9",
     mapstruct: "1.3.1.Final",
     snakeyaml: "1.26",
