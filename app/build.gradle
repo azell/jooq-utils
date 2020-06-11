@@ -7,9 +7,12 @@ plugins {
 dependencies {
   annotationProcessor(Libs.mapstructProcessor)
   annotationProcessor(project(":custom"))
+
   implementation(Libs.jooq)
-  implementation(Libs.mapstruct)
+  implementation(Libs.mapstruct, Libs.slf4jApi)
   implementation(project(":entities"), project(":records"))
+
+  runtimeOnly(Libs.logbackClassic, Libs.postgresql)
 }
 
 spotless {

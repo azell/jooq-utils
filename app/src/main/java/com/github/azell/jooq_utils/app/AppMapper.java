@@ -19,4 +19,10 @@ public interface AppMapper {
 
   @InheritInverseConfiguration
   Employee toEmployee(PersonRecord value);
+
+  @Mapping(target = "id", source = "employeeId")
+  com.github.azell.jooq_utils.sample.entities.Person toPersonEntity(Employee value);
+
+  @InheritInverseConfiguration
+  Employee toEmployee(com.github.azell.jooq_utils.sample.entities.Person value);
 }
