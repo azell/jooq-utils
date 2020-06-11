@@ -9,8 +9,8 @@ As Immutables is needed only at code generation time, for most uses it will not 
 Switching to Postgres for JPA functionality, as the [Reverse Mapping Tool](https://openjpa.apache.org/builds/3.1.0/apache-openjpa/docs/ref_guide_pc_reverse.html) does not support H2.
 
 ```bash
-docker run --rm --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres:11.7 -c fsync=off &
-docker run -it --rm --link some-postgres postgres:11.7 psql -h some-postgres -U postgres
+docker run --rm --name some-postgres -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 postgres:11.8 -c fsync=off &
+docker run -it --rm --link some-postgres postgres:11.8 psql -h some-postgres -U postgres
 ```
 
 ```

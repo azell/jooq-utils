@@ -76,7 +76,7 @@ def fieldDefinition(line, types, state) {
 
 def generatedValue(line, types, state) {
   if (line =~ /@Id\b/) {
-    return "$line @GeneratedValue(strategy = GenerationType.IDENTITY)"
+    return "$line @GeneratedValue(strategy=GenerationType.IDENTITY)"
   }
 
   line
