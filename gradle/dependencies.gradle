@@ -8,7 +8,7 @@ ext {
     liquibase: "3.8.9",
     mapstruct: "1.3.1.Final",
     openjpa: "3.1.1",
-    postgresql: "42.2.13",
+    postgresql: "42.2.14",
     slf4j: "1.7.30",
     snakeyaml: "1.26",
   ]
