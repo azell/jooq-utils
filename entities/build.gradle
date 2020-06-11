@@ -39,7 +39,7 @@ def addIdentity(line) {
     return "$line @GeneratedValue(strategy=GenerationType.IDENTITY)"
   }
 
-  return line
+  line
 }
 
 task filterEntities(type: Copy) {
