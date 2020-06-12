@@ -46,10 +46,12 @@ def columnDefinition(line, types, state) {
       // placeholder for field definition
       state._ = e
 
+      def type = e.value.name
+
       return [
         "${matcher.group(1)}$e.value.columnDefinition${matcher.group(3)}",
-        "@org.hibernate.annotations.Type(type=$e.value.name)"
-      ].join(" ")
+        type ? "@org.hibernate.annotations.Type(type=$type)" : null,
+      ].findResults { it }.join(" ")
     }
   }
 
@@ -99,10 +101,14 @@ def getterOrSetter(line, types, state) {
 def typeDefs(line, types, state) {
   if (line =~ /@Table\b/) {
     def str = types.collect { k, v ->
-      "@org.hibernate.annotations.TypeDef(name=$v.name, typeClass=$v.typeClass)"
+      def attrs = ["defaultForType", "name", "typeClass"].findResults {
+        v.containsKey(it) ? "$it=${v[it]}" : null
+      }.join(", ")
+
+      "@org.hibernate.annotations.TypeDef($attrs)"
     }.join(", ")
 
-    return [line, "@org.hibernate.annotations.TypeDefs({", str, "})"].join(" ")
+    return "$line @org.hibernate.annotations.TypeDefs({ $str })"
   }
 
   line
@@ -125,13 +131,13 @@ task filterEntities(type: Copy) {
   from(dst)
   into(src)
   exclude("**/Databasechangelog*.java")
-  eachFile { detail -> state.clear() }
-  filter { line ->
-    line = generatedValue(line, types, state)
-    line = typeDefs(line, types, state)
-    line = columnDefinition(line, types, state)
-    line = fieldDefinition(line, types, state)
-    line = getterOrSetter(line, types, state)
+  eachFile { state.clear() }
+  filter {
+    it = generatedValue(it, types, state)
+    it = typeDefs(it, types, state)
+    it = columnDefinition(it, types, state)
+    it = fieldDefinition(it, types, state)
+    it = getterOrSetter(it, types, state)
   }
 }
 
