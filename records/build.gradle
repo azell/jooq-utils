@@ -9,7 +9,7 @@ dependencies {
   jooqRuntime(project(":generators"))
 
   annotationProcessor(Libs.immutablesProcessor)
-  api("org.jooq:jooq")
+  api(Libs.guava, "org.jooq:jooq")
   compileOnly(Libs.javaAnnotations)
   compileOnly(Libs.immutablesAnnotations, Libs.immutablesBuilder)
 }

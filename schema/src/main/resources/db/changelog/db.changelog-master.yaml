@@ -34,3 +34,13 @@ databaseChangeLog:
               - column:
                   name: nicknames
                   type: text[]
+  - changeSet:
+      id: 3
+      author: azell
+      changes:
+        - addColumn:
+            tableName: person
+            columns:
+              - column:
+                  name: ages
+                  type: daterange

@@ -36,29 +36,27 @@ tasks {
   }
 }
 
-def columnDefinition(line, types, state) {
+def columnDefinition(line, fields, types, state) {
   def matcher = line =~ /(.*@Column\b.*\bcolumnDefinition\b[^"]*")([^"]*)(.*)/
 
   if (matcher) {
-    def e = types.find { it.key == matcher.group(2) }
+    def e = fields.find { it.key == matcher.group(2) }
 
     if (e) {
       // placeholder for field definition
       state._ = e
 
-      def type = e.value.name
-
       return [
         "${matcher.group(1)}$e.value.columnDefinition${matcher.group(3)}",
-        type ? "@org.hibernate.annotations.Type(type=$type)" : null,
-      ].findResults { it }.join(" ")
+        "@org.hibernate.annotations.Type(type=$e.value.name)",
+      ].join(" ")
     }
   }
 
   line
 }
 
-def fieldDefinition(line, types, state) {
+def fieldDefinition(line, fields, types, state) {
   def matcher = line =~ /(.*\bprivate\b\s*)(\S*)(.*)/
 
   if (matcher) {
@@ -76,7 +74,7 @@ def fieldDefinition(line, types, state) {
   line
 }
 
-def generatedValue(line, types, state) {
+def generatedValue(line, fields, types, state) {
   if (line =~ /@Id\b/) {
     return "$line @GeneratedValue(strategy=GenerationType.IDENTITY)"
   }
@@ -84,7 +82,7 @@ def generatedValue(line, types, state) {
   line
 }
 
-def getterOrSetter(line, types, state) {
+def getterOrSetter(line, fields, types, state) {
   def matcher = line =~ /(.*\bpublic\b.*\b[gs]et)([$\w]*)(.*)/
 
   if (matcher) {
@@ -98,13 +96,10 @@ def getterOrSetter(line, types, state) {
   line
 }
 
-def typeDefs(line, types, state) {
+def typeDefs(line, fields, types, state) {
   if (line =~ /@Table\b/) {
     def str = types.collect { k, v ->
-      def attrs = ["defaultForType", "name", "typeClass"].findResults {
-        v.containsKey(it) ? "$it=${v[it]}" : null
-      }.join(", ")
-
+      def attrs = v.collect { "$it.key=$it.value" }.join(", ")
       "@org.hibernate.annotations.TypeDef($attrs)"
     }.join(", ")
 
@@ -119,12 +114,26 @@ task filterEntities(type: Copy) {
   dependsOn("openjpa")
 
   def state = [:]
-  def types = [
+  def fields = [
     _text: [
       columnDefinition: "text[]",
       fieldDefinition: "java.util.List<String>",
       name: "\"list-array\"",
+    ],
+    daterange: [
+      columnDefinition: "daterange",
+      fieldDefinition: "com.vladmihalcea.hibernate.type.range.Range<java.time.LocalDate>",
+      name: "\"range\"",
+    ],
+  ]
+  def types = [
+    listArray: [
+      name: "\"list-array\"",
       typeClass: "com.vladmihalcea.hibernate.type.array.ListArrayType.class",
+    ],
+    range: [
+      name: "\"range\"",
+      typeClass: "com.vladmihalcea.hibernate.type.range.PostgreSQLRangeType.class",
     ],
   ]
 
@@ -133,11 +142,11 @@ task filterEntities(type: Copy) {
   exclude("**/Databasechangelog*.java")
   eachFile { state.clear() }
   filter {
-    it = generatedValue(it, types, state)
-    it = typeDefs(it, types, state)
-    it = columnDefinition(it, types, state)
-    it = fieldDefinition(it, types, state)
-    it = getterOrSetter(it, types, state)
+    it = generatedValue(it, fields, types, state)
+    it = typeDefs(it, fields, types, state)
+    it = columnDefinition(it, fields, types, state)
+    it = fieldDefinition(it, fields, types, state)
+    it = getterOrSetter(it, fields, types, state)
   }
 }
 

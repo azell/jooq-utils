@@ -1,5 +1,6 @@
 ext {
   Versions = [
+    guava: "29.0-jre",
     hibernate: "5.4.14.Final",
     hibernateTypes: "2.9.11",
     immutables: "2.8.8",
@@ -16,6 +17,7 @@ ext {
   ]
 
   Libs = [
+    guava: "com.google.guava:guava:${Versions.guava}",
     hibernateCore: "org.hibernate:hibernate-core:${Versions.hibernate}",
     hibernateTypes: "com.vladmihalcea:hibernate-types-52:${Versions.hibernateTypes}",
     immutablesAnnotations: "org.immutables:value-annotations:${Versions.immutables}",

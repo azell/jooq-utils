@@ -1,5 +1,7 @@
 package com.github.azell.jooq_utils.app;
 
+import com.google.common.collect.Range;
+import java.time.LocalDate;
 import java.util.List;
 import org.immutables.value.Value;
 import org.jetbrains.annotations.Nullable;
@@ -14,5 +16,9 @@ public interface Employee {
 
   String getLastName();
 
+  @Nullable
   List<String> getNicknames();
+
+  @Nullable
+  Range<LocalDate> getAges();
 }

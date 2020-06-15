@@ -12,17 +12,21 @@ public interface AppMapper {
   Person toPerson(Employee value);
 
   @InheritInverseConfiguration
+  @Mapping(target = "ages", ignore = true)
   Employee toEmployee(Person value);
 
   @Mapping(target = "id", source = "employeeId")
   PersonRecord toPersonRecord(Employee value);
 
   @InheritInverseConfiguration
+  @Mapping(target = "ages", ignore = true)
   Employee toEmployee(PersonRecord value);
 
   @Mapping(target = "id", source = "employeeId")
+  @Mapping(target = "ages", ignore = true)
   com.github.azell.jooq_utils.sample.entities.Person toPersonEntity(Employee value);
 
   @InheritInverseConfiguration
+  @Mapping(target = "ages", ignore = true)
   Employee toEmployee(com.github.azell.jooq_utils.sample.entities.Person value);
 }

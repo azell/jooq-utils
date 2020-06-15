@@ -3,11 +3,14 @@ package com.github.azell.jooq_utils.app;
 import static com.github.azell.jooq_utils.sample.data.Tables.PERSON;
 
 import com.github.azell.jooq_utils.sample.data.tables.pojos.Person;
+import com.google.common.collect.Range;
 import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
@@ -48,6 +51,7 @@ public class App {
               .firstName("Donald")
               .lastName("Duck")
               .nicknames(List.of("Maui Mallard", "Frank Duck", "Fred"))
+              .ages(Range.atLeast(LocalDate.of(1934, Month.JUNE, 9)))
               .build();
 
       app.hibernate(List.of(employee), "Fred");
@@ -86,7 +90,7 @@ public class App {
             .map(person -> create.newRecord(PERSON, person))
             .collect(Collectors.toList());
 
-    create.batchInsert(records).execute();
+    // create.batchInsert(records).execute();
 
     var result =
         create
