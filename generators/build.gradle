@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-  api(Libs.jooqCodegen)
+  api(Libs.guava, Libs.jooqCodegen)
 }
 
 spotless {

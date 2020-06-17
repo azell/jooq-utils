@@ -9,7 +9,8 @@ dependencies {
   jooqRuntime(project(":generators"))
 
   annotationProcessor(Libs.immutablesProcessor)
-  api(Libs.guava, "org.jooq:jooq")
+  api("org.jooq:jooq")
+  api(Libs.guava, project(":generators"))
   compileOnly(Libs.javaAnnotations)
   compileOnly(Libs.immutablesAnnotations, Libs.immutablesBuilder)
 }
@@ -30,6 +31,13 @@ jooq {
         includes = ".*"
         excludes = "information_schema[.].*|databasechangelog.*"
         inputSchema = "public"
+        forcedTypes {
+          forcedType {
+            binding = "com.github.azell.jooq_utils.bindings.PostgresDateRangeBinding"
+            includeTypes = "DATERANGE"
+            userType = "com.google.common.collect.Range<java.time.LocalDate>"
+          }
+        }
       }
       generate {
         deprecated = false

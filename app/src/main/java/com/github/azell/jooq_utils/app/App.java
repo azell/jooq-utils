@@ -4,7 +4,6 @@ import static com.github.azell.jooq_utils.sample.data.Tables.PERSON;
 
 import com.github.azell.jooq_utils.sample.data.tables.pojos.Person;
 import com.google.common.collect.Range;
-import com.vladmihalcea.hibernate.type.array.StringArrayType;
 import java.lang.invoke.MethodHandles;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +14,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import org.hibernate.jpa.TypedParameterValue;
+import org.jooq.Condition;
+import org.jooq.Field;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
 import org.mapstruct.factory.Mappers;
@@ -41,9 +41,10 @@ public class App {
               .firstName("Mickey")
               .lastName("Mouse")
               .nicknames("Bob Cratchit", "King Mickey")
+              .ages(Range.atLeast(LocalDate.of(1928, Month.NOVEMBER, 18)))
               .build();
 
-      app.jooq(conn, List.of(person), "King Mickey");
+      app.jooq(conn, List.of(person), LocalDate.of(1999, Month.DECEMBER, 31));
 
       var employee =
           ImmutableEmployee.builder()
@@ -54,11 +55,11 @@ public class App {
               .ages(Range.atLeast(LocalDate.of(1934, Month.JUNE, 9)))
               .build();
 
-      app.hibernate(List.of(employee), "Fred");
+      app.hibernate(List.of(employee), LocalDate.of(1940, Month.JANUARY, 1));
     }
   }
 
-  private void hibernate(List<Employee> employees, String nickName) {
+  private void hibernate(List<Employee> employees, LocalDate date) {
     logger.info("employees: {}", employees);
 
     var em = factory.createEntityManager();
@@ -70,10 +71,8 @@ public class App {
 
     var cls = com.github.azell.jooq_utils.sample.entities.Person.class;
     var result =
-        em.createNativeQuery("select p.* from Person p where p.nicknames @> :arrayValues", cls)
-            .setParameter(
-                "arrayValues",
-                new TypedParameterValue(StringArrayType.INSTANCE, new String[] {nickName}))
+        em.createNativeQuery("select p.* from Person p where p.ages @> cast(:date as date)", cls)
+            .setParameter("date", date)
             .getResultList();
 
     result.stream()
@@ -81,7 +80,7 @@ public class App {
         .forEach(e -> logger.info("employee: {}", e));
   }
 
-  private void jooq(Connection conn, List<Person> people, String nickName) {
+  private void jooq(Connection conn, List<Person> people, LocalDate date) {
     logger.info("people: {}", people);
 
     var create = DSL.using(conn, SQLDialect.POSTGRES);
@@ -90,14 +89,14 @@ public class App {
             .map(person -> create.newRecord(PERSON, person))
             .collect(Collectors.toList());
 
-    // create.batchInsert(records).execute();
+    create.batchInsert(records).execute();
 
-    var result =
-        create
-            .selectFrom(PERSON)
-            .where(PERSON.NICKNAMES.contains(DSL.cast(DSL.array(nickName), PERSON.NICKNAMES)))
-            .fetch();
+    var result = create.selectFrom(PERSON).where(rangeContainsElem(PERSON.AGES, date)).fetch();
 
     logger.info("Query: {}", result);
+  }
+
+  private static Condition rangeContainsElem(Field<Range<LocalDate>> f1, LocalDate e) {
+    return DSL.condition("{0} @> {1}", f1, DSL.val(e));
   }
 }
