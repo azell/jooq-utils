@@ -10,7 +10,10 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Month;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.jooq.Condition;
 import org.jooq.Field;
@@ -22,6 +25,7 @@ import org.slf4j.LoggerFactory;
 public class App {
   private final Logger logger = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+  @SuppressWarnings("deprecation")
   public static void main(String[] args) throws SQLException {
     var userName = "postgres";
     var password = "mysecretpassword";
@@ -37,6 +41,15 @@ public class App {
       person.setAgesInt4(Range.lessThan(2000));
       person.setAgesInt8(Range.openClosed(1L, 123456789L));
       person.setAgesNum(Range.closedOpen(BigDecimal.ONE, new BigDecimal("10.0123456789")));
+
+      var lhs = LocalDateTime.of(1984, Month.SEPTEMBER, 2, 6, 30, 15, 999_999_999);
+      var rhs = LocalDateTime.of(2000, Month.JANUARY, 1, 14, 15, 16);
+
+      person.setAgesTs(Range.closed(lhs, rhs));
+
+      var tz = ZoneId.of("America/Los_Angeles");
+
+      person.setAgesTstz(Range.open(ZonedDateTime.of(lhs, tz), ZonedDateTime.of(rhs, tz)));
 
       app.jooq(conn, List.of(person), LocalDate.of(1999, Month.DECEMBER, 31));
     }

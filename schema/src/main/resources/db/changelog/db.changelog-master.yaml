@@ -44,3 +44,13 @@ databaseChangeLog:
                   type: numrange
                   constraints:
                     nullable: false
+              - column:
+                  name: ages_ts
+                  type: tsrange
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ages_tstz
+                  type: tstzrange
+                  constraints:
+                    nullable: false

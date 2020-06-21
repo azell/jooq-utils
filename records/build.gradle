@@ -47,6 +47,16 @@ jooq {
             includeTypes = "NUMRANGE"
             userType = "com.google.common.collect.Range<java.math.BigDecimal>"
           }
+          forcedType {
+            binding = "com.github.azell.jooq_utils.bindings.PostgresTimestampRangeBinding"
+            includeTypes = "TSRANGE"
+            userType = "com.google.common.collect.Range<java.time.LocalDateTime>"
+          }
+          forcedType {
+            binding = "com.github.azell.jooq_utils.bindings.PostgresTimestampTimezoneRangeBinding"
+            includeTypes = "TSTZRANGE"
+            userType = "com.google.common.collect.Range<java.time.ZonedDateTime>"
+          }
         }
       }
       generate {
