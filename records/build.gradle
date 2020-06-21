@@ -6,13 +6,9 @@ plugins {
 dependencies {
   jooqRuntime(Libs.logbackClassic)
   jooqRuntime(Libs.postgresql)
-  jooqRuntime(project(":generators"))
 
-  annotationProcessor(Libs.immutablesProcessor)
   api("org.jooq:jooq")
-  api(Libs.guava, project(":generators"))
-  compileOnly(Libs.javaAnnotations)
-  compileOnly(Libs.immutablesAnnotations, Libs.immutablesBuilder)
+  api(Libs.guava, project(":types"))
 }
 
 jooq {
@@ -25,7 +21,6 @@ jooq {
       password = "mysecretpassword"
     }
     generator {
-      name = "com.github.azell.jooq_utils.generators.BuilderGenerator"
       database {
         name = "org.jooq.meta.postgres.PostgresDatabase"
         includes = ".*"
@@ -36,6 +31,21 @@ jooq {
             binding = "com.github.azell.jooq_utils.bindings.PostgresDateRangeBinding"
             includeTypes = "DATERANGE"
             userType = "com.google.common.collect.Range<java.time.LocalDate>"
+          }
+          forcedType {
+            binding = "com.github.azell.jooq_utils.bindings.PostgresInt4RangeBinding"
+            includeTypes = "INT4RANGE"
+            userType = "com.google.common.collect.Range<Integer>"
+          }
+          forcedType {
+            binding = "com.github.azell.jooq_utils.bindings.PostgresInt8RangeBinding"
+            includeTypes = "INT8RANGE"
+            userType = "com.google.common.collect.Range<Long>"
+          }
+          forcedType {
+            binding = "com.github.azell.jooq_utils.bindings.PostgresNumRangeBinding"
+            includeTypes = "NUMRANGE"
+            userType = "com.google.common.collect.Range<java.math.BigDecimal>"
           }
         }
       }

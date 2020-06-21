@@ -2,12 +2,12 @@ package com.github.azell.jooq_utils.converters;
 
 import com.google.common.collect.BoundType;
 import com.google.common.collect.Range;
-import java.time.LocalDate;
-import org.jooq.Converter;
+import java.util.function.Function;
 
-public class DateRangeConverter implements Converter<Object, Range<LocalDate>> {
-  @Override
-  public Range<LocalDate> from(Object obj) {
+enum RangeHandler {
+  INSTANCE;
+
+  <T extends Comparable> Range<T> from(Object obj, Function<String, T> mapper) {
     if (obj == null) {
       return null;
     }
@@ -26,8 +26,8 @@ public class DateRangeConverter implements Converter<Object, Range<LocalDate>> {
     var lowerStr = str.substring(1, delim);
     var upperStr = str.substring(delim + 1, str.length() - 1);
 
-    var lower = lowerStr.isEmpty() ? null : LocalDate.parse(lowerStr);
-    var upper = upperStr.isEmpty() ? null : LocalDate.parse(upperStr);
+    var lower = lowerStr.isEmpty() ? null : mapper.apply(lowerStr);
+    var upper = upperStr.isEmpty() ? null : mapper.apply(upperStr);
 
     if (lower != null) {
       if (upper != null) {
@@ -50,31 +50,19 @@ public class DateRangeConverter implements Converter<Object, Range<LocalDate>> {
     }
   }
 
-  @Override
-  public Class<Object> fromType() {
-    return Object.class;
-  }
-
-  @Override
-  public Object to(Range<LocalDate> range) {
+  <T extends Comparable> Object to(Range<T> range, Function<T, String> mapper) {
     if (range == null) {
       return null;
     }
 
-    StringBuilder sb = new StringBuilder();
+    var sb = new StringBuilder();
 
     sb.append(range.hasLowerBound() && range.lowerBoundType() == BoundType.CLOSED ? '[' : '(')
-        .append(range.hasLowerBound() ? range.lowerEndpoint() : "")
+        .append(range.hasLowerBound() ? mapper.apply(range.lowerEndpoint()) : "")
         .append(",")
-        .append(range.hasUpperBound() ? range.upperEndpoint() : "")
+        .append(range.hasUpperBound() ? mapper.apply(range.upperEndpoint()) : "")
         .append(range.hasUpperBound() && range.upperBoundType() == BoundType.CLOSED ? ']' : ')');
 
     return sb.toString();
-  }
-
-  @SuppressWarnings({"unchecked", "rawtypes"})
-  @Override
-  public Class<Range<LocalDate>> toType() {
-    return (Class) Range.class;
   }
 }

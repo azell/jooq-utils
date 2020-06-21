@@ -24,23 +24,23 @@ databaseChangeLog:
                   type: text
                   constraints:
                     nullable: false
-  - changeSet:
-      id: 2
-      author: azell
-      changes:
-        - addColumn:
-            tableName: person
-            columns:
-              - column:
-                  name: nicknames
-                  type: text[]
-  - changeSet:
-      id: 3
-      author: azell
-      changes:
-        - addColumn:
-            tableName: person
-            columns:
               - column:
                   name: ages
                   type: daterange
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ages_int4
+                  type: int4range
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ages_int8
+                  type: int8range
+                  constraints:
+                    nullable: false
+              - column:
+                  name: ages_num
+                  type: numrange
+                  constraints:
+                    nullable: false
