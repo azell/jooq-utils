@@ -14,7 +14,7 @@ public class TimestampTimezoneRangeConverter implements Converter<Object, Range<
           .appendLiteral('"')
           .appendPattern("yyyy-MM-dd HH:mm:ss")
           .optionalStart()
-          .appendPattern(".")
+          .appendLiteral(".")
           .appendFraction(ChronoField.NANO_OF_SECOND, 1, 6, false)
           .optionalEnd()
           .appendPattern("X")
